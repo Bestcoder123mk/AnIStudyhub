@@ -1,0 +1,16 @@
+{
+  "name": "StudyHub — Class 10 CBSE",
+  "short_name": "StudyHub",
+  "description": "Complete CBSE Class 10 study companion — Science, Social Science, MCQs, flashcards, formulas, mock tests, and AI tutor.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0c1a",
+  "theme_color": "#0d0c1a",
+  "icons": [
+    {
+      "src": "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
