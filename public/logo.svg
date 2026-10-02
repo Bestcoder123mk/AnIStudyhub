@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  StudyHub mark.
+  Concept: an ascending chevron / pediment — reads as a mountain peak (climb,
+  level up), an abstract "A", and the roofline of the museum's own marble
+  portico all at once. Gold-on-near-black is not a new palette: #c9a96a is
+  the exact gold already used for the museum's pillars/sconces/dais, and the
+  background is the app's own —background (oklch 0.085 0.006 280, i.e.
+  #0d0c1a — the literal manifest background_color). The violet crossbar
+  pulls in —primary (#a78bfa / #7c3aed), the app's one considered accent.
+  Renders clean at 16px: two solid tapered shapes + one bar, no fine detail.
+-->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#17141f"/>
+      <stop offset="100%" stop-color="#0b0a12"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="38%" r="55%">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0dfb0"/>
+      <stop offset="45%" stop-color="#d8bc80"/>
+      <stop offset="100%" stop-color="#b3925a"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#c4b5fd"/>
+    </linearGradient>
+    <filter id="barGlow" x="-60%" y="-200%" width="220%" height="500%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="tile">
+      <rect x="0" y="0" width="512" height="512" rx="112" ry="112"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#tile)">
+    <rect x="0" y="0" width="512" height="512" fill="url(#bg)"/>
+    <rect x="0" y="0" width="512" height="512" fill="url(#halo)"/>
+
+    <!-- top glass highlight, echoes the app's card-premium inset highlight -->
+    <path d="M 0 4 A 256 256 0 0 1 512 4 L 512 70 A 256 256 0 0 0 0 70 Z" fill="#ffffff" opacity="0.05"/>
+
+    <!-- violet crossbar glow, sits behind the arms -->
+    <rect x="176" y="286" width="160" height="26" rx="13" fill="url(#bar)" filter="url(#barGlow)" opacity="0.9"/>
+
+    <!-- gold chevron — two mirrored tapered arms meeting at the apex -->
+    <path d="M 256 156 L 222 156 L 128 388 L 196 388 Z" fill="url(#gold)"/>
+    <path d="M 256 156 L 290 156 L 384 388 L 316 388 Z" fill="url(#gold)"/>
+
+    <!-- crossbar redrawn solid on top so it reads as crossing the arms -->
+    <rect x="185" y="288" width="142" height="22" rx="11" fill="url(#bar)"/>
+
+    <!-- apex spark -->
+    <circle cx="256" cy="150" r="9" fill="#fff6e0"/>
+    <circle cx="256" cy="150" r="18" fill="#f0dfb0" opacity="0.35"/>
+  </g>
+
+  <!-- hairline tile border, like the app's —glass-border -->
+  <rect x="1.5" y="1.5" width="509" height="509" rx="110.5" ry="110.5" fill="none" stroke="#c9a96a" stroke-opacity="0.18" stroke-width="1.5"/>
+</svg>
