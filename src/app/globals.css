@@ -1,0 +1,1328 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Geist (self-hosted, via next/font/local) is the whole type system — one
+     family carrying both body and display duty, the way SF Pro does on
+     Apple platforms, with the system stack as a safety net only. */
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Subject/track accent colors. Values here must match SUBJECT_META in
+     src/store/use-study-store.ts (Maths/English/Sanskrit — one color per
+     whole track, no sub-subject split) and the per-sub-subject values below
+     (Science/SSC). This is the ONE place to retint any of them — every
+     view reads the color through the subj- classes and --sc custom
+     property rather than a local hex literal. */
+  --color-chem: #fbbf24;
+  --color-bio: #34d399;
+  --color-phy: #60a5fa;
+  --color-hist: #fb923c;
+  --color-geo: #22d3ee;
+  --color-polsci: #c084fc;
+  --color-eco: #f472b6;
+  --color-maths: #38bdf8;
+  --color-english: #f472b6;
+  --color-sanskrit: #fbbf24;
+}
+
+/* ===== Theme: Midnight (default dark) =====
+   True black-and-white — zero chroma across every neutral, the way Apple's
+   own dark-mode marketing surfaces (apple.com, the App Store) actually
+   read: an OLED-near-black canvas, pure white ink, and a solid white/black
+   pill for the one primary action. Colour is spent only where it carries
+   real meaning — a subject accent, a correct/incorrect signal, a reward —
+   never on chrome, navigation, or buttons. */
+:root, [data-theme="midnight"] {
+  --radius: 1rem;
+  /* Feather green by default (DEFAULT_ACCENT in the store). The oklch fallback only covers the
+     brief pre-hydration paint — keep it visually in sync. */
+  --primary: var(--user-accent, oklch(0.74 0.22 135));
+  --primary-foreground: var(--user-accent-fg, oklch(0.2 0.06 140));
+  /* A deep teal-navy canvas. Pure black gave the glass nothing to bend; this reads as night
+     rather than void, and lets the chunky cards sit on it with a clear edge. */
+  --background: oklch(0.205 0.022 230);
+  --foreground: oklch(0.97 0.006 230);
+  --card: oklch(0.262 0.024 230);
+  --card-foreground: oklch(0.97 0.006 230);
+  --popover: oklch(0.285 0.025 230);
+  --popover-foreground: oklch(0.97 0.006 230);
+  --secondary: oklch(0.3 0.025 230);
+  --secondary-foreground: oklch(0.96 0.006 230);
+  --muted: oklch(0.27 0.022 230);
+  --muted-foreground: oklch(0.76 0.02 230);
+  --accent: oklch(0.31 0.027 230);
+  --accent-foreground: oklch(0.98 0.004 230);
+  --destructive: oklch(0.66 0.22 25);
+  --edge: oklch(0.375 0.026 230);
+  --border: oklch(0.375 0.026 230);
+  --input: oklch(0.285 0.025 230);
+  --ring: color-mix(in oklch, var(--primary) 60%, transparent);
+  --chart-1: var(--primary);
+  --chart-2: oklch(0.72 0.15 235);
+  --chart-3: oklch(0.78 0.2 135);
+  --chart-4: oklch(0.85 0.17 90);
+  --chart-5: oklch(0.7 0.2 28);
+  --sidebar: oklch(0.205 0.022 230);
+  --sidebar-foreground: oklch(0.95 0.006 230);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: oklch(0.285 0.025 230);
+  --sidebar-accent-foreground: oklch(0.98 0.004 230);
+  --sidebar-border: oklch(0.375 0.026 230);
+  --sidebar-ring: var(--primary);
+  --glass: oklch(1 0 0 / 8%);
+  --glass-border: oklch(1 0 0 / 16%);
+  --glow: color-mix(in oklch, var(--primary) 30%, transparent);
+
+  /* Liquid-glass light model — read by the .liquid / .glass-strong / .glass-clear rules below. */
+  --lg-hi: 255 255 255;
+  --lg-far: 255 255 255;
+  --lg-cool: 200 226 255;
+  --lg-warm: 255 226 200;
+  --lg-rim: 0.62;
+  --lg-rim-far: 0.18;
+  --lg-rim-base: 0.1;
+  --lg-sweep: 0.08;
+  --lg-caustic: 0.05;
+}
+
+/* ===== Theme: Twilight ===== */
+[data-theme="twilight"] {
+  --edge: var(--border);
+  --background: oklch(0.16 0.05 300);
+  --foreground: oklch(0.95 0.01 300);
+  --card: oklch(0.21 0.06 300);
+  --card-foreground: oklch(0.95 0.01 300);
+  --popover: oklch(0.21 0.06 300);
+  --popover-foreground: oklch(0.95 0.01 300);
+  --primary: oklch(0.72 0.2 330);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.26 0.06 300);
+  --secondary-foreground: oklch(0.92 0.02 300);
+  --muted: oklch(0.24 0.05 300);
+  --muted-foreground: oklch(0.66 0.04 300);
+  --accent: oklch(0.28 0.07 330);
+  --accent-foreground: oklch(0.95 0.01 300);
+  --destructive: oklch(0.62 0.22 25);
+  --border: oklch(0.35 0.06 300 / 60%);
+  --input: oklch(0.24 0.05 300);
+  --ring: oklch(0.72 0.2 330);
+  --sidebar: oklch(0.18 0.05 300);
+  --sidebar-foreground: oklch(0.92 0.02 300);
+  --sidebar-primary: oklch(0.72 0.2 330);
+  --sidebar-accent: oklch(0.26 0.06 300);
+  --sidebar-border: oklch(0.35 0.06 300 / 60%);
+  --glass: oklch(0.95 0.05 300 / 10%);
+  --glass-border: oklch(0.45 0.07 330 / 25%);
+  --glow: oklch(0.72 0.2 330 / 35%);
+}
+
+/* ===== Theme: Daylight (light) =====
+   The other half of the black-and-white pair — Apple's own light-mode
+   canvas (a hair off pure white, ~#f5f5f7) with crisp white cards lifted
+   off it by shadow rather than colour, black ink, and a solid black pill
+   for primary actions. */
+[data-theme="daylight"] {
+  --background: oklch(0.985 0.003 230);
+  --foreground: oklch(0.3 0.012 245);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.3 0.012 245);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.3 0.012 245);
+  --primary: var(--user-accent, oklch(0.74 0.22 135));
+  --primary-foreground: var(--user-accent-fg, oklch(0.2 0.06 140));
+  --secondary: oklch(0.96 0.004 240);
+  --secondary-foreground: oklch(0.3 0.012 245);
+  --muted: oklch(0.962 0.004 240);
+  --muted-foreground: oklch(0.5 0.012 245);
+  --accent: oklch(0.94 0.01 240);
+  --accent-foreground: oklch(0.3 0.012 245);
+  --destructive: oklch(0.6 0.23 25);
+  --edge: oklch(0.89 0.006 240);
+  --border: oklch(0.89 0.006 240);
+  --input: oklch(0.92 0.005 240);
+  --ring: color-mix(in oklch, var(--primary) 60%, transparent);
+  --chart-1: var(--primary);
+  --sidebar: oklch(0.985 0.003 230);
+  --sidebar-foreground: oklch(0.3 0.012 245);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: oklch(0.95 0.008 240);
+  --sidebar-accent-foreground: oklch(0.3 0.012 245);
+  --sidebar-border: oklch(0.89 0.006 240);
+  --sidebar-ring: var(--primary);
+  --glass: oklch(1 0 0 / 72%);
+  --glass-border: oklch(0 0 0 / 9%);
+  --glow: oklch(0 0 0 / 18%);
+  --lg-far: 0 0 0;
+  --lg-rim: 0.95;
+  --lg-rim-far: 0.10;
+  --lg-rim-base: 0.6;
+  --lg-sweep: 0.55;
+  --lg-caustic: 0.045;
+}
+
+/* ===== Theme: Sepia ===== */
+[data-theme="sepia"] {
+  --edge: var(--border);
+  --background: oklch(0.94 0.04 75);
+  --foreground: oklch(0.28 0.03 50);
+  --card: oklch(0.96 0.035 75);
+  --card-foreground: oklch(0.28 0.03 50);
+  --popover: oklch(0.96 0.035 75);
+  --popover-foreground: oklch(0.28 0.03 50);
+  --primary: oklch(0.5 0.12 50);
+  --primary-foreground: oklch(0.97 0.02 75);
+  --secondary: oklch(0.9 0.04 75);
+  --secondary-foreground: oklch(0.3 0.03 50);
+  --muted: oklch(0.91 0.035 75);
+  --muted-foreground: oklch(0.48 0.03 50);
+  --accent: oklch(0.88 0.05 60);
+  --accent-foreground: oklch(0.3 0.03 50);
+  --destructive: oklch(0.55 0.2 25);
+  --border: oklch(0.82 0.04 75);
+  --input: oklch(0.84 0.04 75);
+  --ring: oklch(0.5 0.12 50);
+  --sidebar: oklch(0.93 0.04 75);
+  --sidebar-foreground: oklch(0.3 0.03 50);
+  --sidebar-primary: oklch(0.5 0.12 50);
+  --sidebar-accent: oklch(0.9 0.04 75);
+  --sidebar-border: oklch(0.82 0.04 75);
+  --glass: oklch(0.95 0.04 75 / 75%);
+  --glass-border: oklch(0.6 0.05 60 / 25%);
+  --glow: oklch(0.5 0.12 50 / 18%);
+  --lg-far: 0 0 0;
+  --lg-rim: 0.95;
+  --lg-rim-far: 0.10;
+  --lg-rim-base: 0.6;
+  --lg-sweep: 0.55;
+  --lg-caustic: 0.045;
+}
+
+/* ===== Theme: High Contrast ===== */
+[data-theme="contrast"] {
+  --edge: var(--border);
+  --background: oklch(0.08 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.12 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.12 0 0);
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(0.85 0.2 80);
+  --primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.2 0 0);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.18 0 0);
+  --muted-foreground: oklch(0.85 0 0);
+  --accent: oklch(0.25 0 0);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.7 0.25 25);
+  --border: oklch(0.6 0 0);
+  --input: oklch(0.2 0 0);
+  --ring: oklch(0.85 0.2 80);
+  --sidebar: oklch(0.1 0 0);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.85 0.2 80);
+  --sidebar-accent: oklch(0.22 0 0);
+  --sidebar-border: oklch(0.6 0 0);
+  --glass: oklch(0.14 0 0 / 85%);
+  --glass-border: oklch(0.7 0 0);
+  --glow: oklch(0.85 0.2 80 / 40%);
+}
+
+/* ===== Distraction-free monochrome mode =====
+   Settings → Appearance & Focus → "Distraction-free monochrome mode".
+   Neutralises all 10 subject/track accent colors (Chemistry/Biology/
+   Physics/History/Geography/Pol. Science/Economics/Maths/English/
+   Sanskrit) to a single gray so every screen reads as one calm, unified
+   palette — without touching the correct/incorrect or reward colors,
+   which aren't "subject colors" and still need to carry their own
+   meaning. Custom properties inherit down the tree, so overriding the
+   ten source tokens here is enough to retint every element using
+   .subj-*, .text-subj, .bg-subj-dim, .border-subj, or .meter-fill under
+   a subject tint. */
+.mono-mode {
+  --color-chem: var(--muted-foreground);
+  --color-bio: var(--muted-foreground);
+  --color-phy: var(--muted-foreground);
+  --color-hist: var(--muted-foreground);
+  --color-geo: var(--muted-foreground);
+  --color-polsci: var(--muted-foreground);
+  --color-eco: var(--muted-foreground);
+  --color-maths: var(--muted-foreground);
+  --color-english: var(--muted-foreground);
+  --color-sanskrit: var(--muted-foreground);
+}
+
+/* ===== Mobile safe-area padding =====
+   Respects the iPhone notch/Dynamic Island and the home-indicator gesture
+   bar so fixed headers, bottom nav, and popups never sit under either. */
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.pb-safe-nav { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 4.25rem); }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1, "cv11" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    letter-spacing: 0;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  /* text size scaling */
+  [data-text="md"] { font-size: 15px; }
+  [data-text="lg"] { font-size: 16.5px; }
+  [data-text="xl"] { font-size: 18px; }
+
+  /* Universal baseline: every interactive element gets a smooth transition
+     on the properties most likely to change on hover/focus/press, even
+     ones nothing else in this file hand-tunes. This alone turns hover and
+     focus-visible state changes from a hard snap into a soft settle
+     app-wide — the minimum "every single thing gets a small animation"
+     bar — without adding any transform/motion of its own, so it can never
+     fight a more specific rule elsewhere. prefers-reduced-motion (below)
+     still zeroes it out like everything else. */
+  button:not(:disabled), [role="button"], a, summary, label,
+  input, textarea, select {
+    transition: background-color 0.16s ease, border-color 0.16s ease,
+      color 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+  }
+}
+
+/* ===== Glassmorphism utility ===== */
+/* ===== Liquid glass =====
+   Built against the liquid-glass-ui skill. Two intentionally different
+   tiers, matching the skill's "glass is for controls, not content" rule:
+
+   1. .glass / .glass-strong (unchanged call sites — every screen already
+      using these) — a calm, static frosted surface. Correct for the many
+      content-adjacent cards in this app (quiz cards, chapter panels) that
+      predate this pass; left alone rather than retrofitted with motion
+      that belongs on controls, not content.
+   2. .glass-interactive — layered ON TOP of .glass/.glass-strong (or
+      alone) for genuine functional-layer elements: buttons, the sidebar,
+      dialogs/sheets/menus, the museum's floating pills. Adds a real
+      two-layer pointer-tracked specular highlight (tight hotspot + a
+      softer, laggier ambient glow — see theme-provider.tsx for the RAF
+      loop that drives --hx/--hy/--hx-soft/--hy-soft/--rx/--ry), a subtle
+      pointer-driven 3D tilt, and spring-eased press/settle states.
+      Falls back to the plain static sheen under prefers-reduced-motion
+      and to a solid, opaque surface under prefers-reduced-transparency —
+      see the accessibility block at the end of this section.
+   3. .glass-clear — a lighter, more-transparent static surface for glass
+      sitting over rich/busy media rather than plain background (the 3D
+      museum's HUD chrome: the joystick, minimap, ambient-sound toggle,
+      station/exhibit overlay bars). Derived from the same --glass token
+      via color-mix rather than a new per-theme variable, so it stays in
+      sync with all five themes automatically. Combine with
+      .glass-interactive for controls that both float over the canvas
+      AND need the pointer-tracked highlight (e.g. the joystick).
+   4. .glass-refract-sm/-md/-lg — Tier B progressive enhancement (real
+      edge lensing via an SVG feDisplacementMap, see LiquidGlassDefs).
+      Chromium-only; every other engine silently keeps the Tier A look
+      above. Pick the size class matching the element's rough footprint
+      (sm = buttons/pills/badges, md = cards/popovers/museum panels,
+      lg = sidebar/dialogs/sheets) — the displacement map's <rect> has to
+      be shaped roughly like what it's distorting or the effect reads as
+      misregistered instead of lens-like.
+*/
+/* @property registrations for every var the dynamic engine
+   (liquid-glass-engine.ts) writes. Two things this buys, both load-bearing:
+     - inherits:false means updating one glass element's highlight/tilt/glow
+       invalidates only that element, never its subtree — the whole point of
+       driving dozens of surfaces from one shared RAF loop without paying for
+       a layout/paint storm.
+     - it's what makes --lg-rp animatable via Element.animate() at all (the
+       ripple in .lg-dyn below); without it a custom property can only ever
+       jump between values, never tween smoothly through one.
+   Unsupported engines (pre-128 Firefox) just ignore this at-rule — every var
+   still works as a plain custom property, the ripple is the one casualty
+   (liquid-glass-engine.ts feature-detects that and skips it there). */
+@property --hx { syntax: '<percentage>'; inherits: false; initial-value: 30%; }
+@property --hy { syntax: '<percentage>'; inherits: false; initial-value: 20%; }
+@property --hx-soft { syntax: '<percentage>'; inherits: false; initial-value: 35%; }
+@property --hy-soft { syntax: '<percentage>'; inherits: false; initial-value: 30%; }
+@property --rx { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@property --ry { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@property --lg-sc { syntax: '<number>'; inherits: false; initial-value: 1; }
+@property --lg-gl { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --lg-rp { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --lg-rr { syntax: '<length>'; inherits: false; initial-value: 0px; }
+@property --lg-px { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+@property --lg-py { syntax: '<percentage>'; inherits: false; initial-value: 50%; }
+@property --lg-ra { syntax: '<number>'; inherits: false; initial-value: 0.3; }
+/* Light direction (clockwise from up). 323deg = the lamp up and to the left. */
+@property --lg-ang { syntax: '<angle>'; inherits: false; initial-value: 323deg; }
+/* 0 → 1 while a control is hovered / focused / pressed: wakes the small hotspot. */
+@property --lg-hs { syntax: '<number>'; inherits: false; initial-value: 0; }
+
+/* ---- The material: fill, blur, depth, and an inner edge that reads as thickness ----
+   NEVER hand-write `-webkit-backdrop-filter` next to `backdrop-filter` in this
+   file. The CSS compiler (lightningcss, inside Next) collapses the pair — when the
+   standard property comes first — down to ONLY the -webkit- one, which Chrome,
+   Edge and Firefox ignore: the glass silently loses all blur and refraction there.
+   Write the standard property alone; the compiler adds the Safari prefix itself. */
+/* ===== The two layers (this is the whole design system) =====
+   CONTENT layer — .glass, .card-premium, <Card>: solid, tactile, Duolingo-style. A 2px edge and a
+   4px "ledge" underneath that squashes flat when pressed. (The class name .glass is historical:
+   ~400 call sites use it for cards, and cards are content, so they stopped being glass.)
+   FUNCTIONAL layer — .liquid, .glass-strong, .glass-clear: real Liquid Glass. Reserved for things
+   that float over content: the dock, headers, sheets, dialogs, menus, the answer sheet. */
+:root { --ledge: 4px; --primary-ledge: color-mix(in oklch, var(--primary) 66%, black); }
+.glass, .card-premium {
+  background-color: var(--card);
+  border: 2px solid var(--ledge-c, var(--edge));
+  box-shadow: 0 var(--ledge) 0 0 var(--ledge-c, var(--edge));
+}
+@layer base { .glass, .card-premium { border-radius: 1.25rem; } }
+/* Clickable content cards squash into their ledge, like a physical key. */
+button.glass, a.glass, [role="button"].glass, button.card-premium, a.card-premium, [role="button"].card-premium {
+  cursor: pointer;
+  transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.14s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, border-color 0.2s ease;
+}
+@media (hover: hover) {
+  button.glass:hover, a.glass:hover, [role="button"].glass:hover, button.card-premium:hover, a.card-premium:hover, [role="button"].card-premium:hover {
+    background-color: color-mix(in oklch, var(--card) 94%, var(--foreground) 6%);
+    border-color: color-mix(in oklch, var(--sc, var(--primary)) 40%, var(--edge));
+    --ledge-c: color-mix(in oklch, var(--sc, var(--primary)) 40%, var(--edge));
+  }
+}
+button.glass:active, a.glass:active, [role="button"].glass:active, button.card-premium:active, a.card-premium:active, [role="button"].card-premium:active {
+  transform: translateY(var(--ledge));
+  box-shadow: 0 0 0 0 transparent;
+}
+
+/* ---- Liquid Glass material (functional layer) ---- */
+.liquid {
+  /* The fill itself is always neutral — colour, where it appears at all,
+     lives on badges/text, never on the glass. */
+  background-color: color-mix(in oklch, var(--card) 46%, transparent);
+  backdrop-filter: blur(20px) saturate(165%) brightness(1.05);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 0 rgb(var(--lg-hi) / calc(var(--lg-rim) * 0.28)),
+    inset 0 -1px 0 0 rgb(0 0 0 / 0.20),
+    inset 0 0 18px -6px rgb(var(--lg-hi) / calc(var(--lg-rim-base) * 1.3)),
+    0 1px 2px rgb(0 0 0 / 0.12),
+    0 10px 26px -14px rgb(0 0 0 / 0.55);
+}
+
+.glass-strong {
+  background-color: color-mix(in oklch, var(--card) 64%, transparent);
+  backdrop-filter: blur(24px) saturate(180%) brightness(1.04);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 0 rgb(var(--lg-hi) / calc(var(--lg-rim) * 0.32)),
+    inset 0 -1px 0 0 rgb(0 0 0 / 0.22),
+    inset 0 0 20px -6px rgb(var(--lg-hi) / calc(var(--lg-rim-base) * 1.3)),
+    0 1px 2px rgb(0 0 0 / 0.12),
+    0 12px 30px -14px rgb(0 0 0 / 0.6);
+}
+
+/* Clear variant — for chrome floating directly over rich, busy media rather
+   than plain app background (the museum's 3D canvas). Thinner and more
+   transparent than .glass, with less blur so the world underneath stays
+   legible, and a stronger outer shadow to compensate. Built from color-mix()
+   off the --glass token so it inherits every theme automatically. */
+.glass-clear {
+  background-color: color-mix(in oklch, var(--glass) 52%, transparent);
+  backdrop-filter: blur(14px) saturate(190%) brightness(1.06);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 0 rgb(var(--lg-hi) / calc(var(--lg-rim) * 0.42)),
+    inset 0 -1px 0 0 rgb(0 0 0 / 0.14),
+    inset 0 0 20px -6px rgb(var(--lg-hi) / calc(var(--lg-rim-base) * 1.6)),
+    0 10px 28px -10px rgb(0 0 0 / 0.55);
+}
+
+/* ---- The light model ----
+   One imaginary lamp, up and to the left, lights every pane the same way —
+   and a pane doesn't glow in a spot, it catches light the way a real
+   bevelled sheet of glass does:
+
+     rim      a thin specular line hugging the WHOLE edge (::after, a masked
+              conic ring). Brightest on the arc facing the light, a faint
+              counter-arc where light exits the far side, and a whisper of
+              ring all the way round so the silhouette always reads. The
+              lit arc's two shoulders carry a hair of cool / warm —
+              dispersion, which is what separates "glass" from "white border".
+     sweep    a broad linear wash from the lit edge that is gone by the
+              middle of the pane, so the content area stays clean (::before).
+     caustic  light that passed through the thickness, pooled softly on the
+              far edge (::before).
+     edge     an inner glow just inside the border — apparent thickness
+              (box-shadow, above).
+
+   --lg-ang is the light direction. At rest it is the default; the engine
+   (liquid-glass-engine.ts) turns it per surface toward the pointer, the
+   scroll direction or the device tilt, so the lit arc travels round the
+   perimeter instead of a blob sliding about inside. With the engine off
+   nothing moves and every pane still has the complete material.
+
+   GOTCHA this block exists because of: the engine's variables are
+   registered `inherits: false` (so updating one surface never restyles its
+   subtree), and a pseudo-element does NOT see a non-inherited property from
+   the element it belongs to — it gets the initial value. Every pseudo rule
+   below therefore re-declares what it reads as `inherit`. Without that, the
+   old highlight was frozen at one spot on every surface, forever. */
+.liquid, .glass-strong, .glass-clear, .glass-interactive, .liquid-sheen {
+  isolation: isolate;
+  /* NB: no per-frame custom property may be INHERITED here (an earlier --lg-k was): the engine rewrites
+     --lg-gl every frame, and an inherited value depending on it restyles the whole subtree each time.
+     The brightness factor (0.72 at rest → 1) is therefore written inline wherever it is used. */
+}
+.liquid::before, .liquid::after,
+.glass-strong::before, .glass-strong::after,
+.glass-clear::before, .glass-clear::after,
+.glass-interactive::before, .glass-interactive::after,
+.liquid-sheen::before, .liquid-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  --hx: inherit; --hy: inherit; --lg-gl: inherit; --lg-px: inherit; --lg-py: inherit;
+  --lg-rr: inherit; --lg-rp: inherit; --lg-ra: inherit; --lg-ang: inherit; --lg-hs: inherit;
+}
+
+/* surface light — beneath the content, above the fill */
+.liquid::before, .glass-strong::before, .glass-clear::before,
+.glass-interactive::before, .liquid-sheen::before {
+  z-index: -1;
+  background-image:
+    /* press ripple: a hollow ring that fades as it grows (size is 0 at rest) */
+    radial-gradient(circle, transparent 55%, rgb(var(--lg-hi) / calc(var(--lg-ra) * (1 - var(--lg-rp)))) 64%, transparent 74%),
+    /* pointer glint — small, soft, awake only while hovered / focused / pressed */
+    radial-gradient(circle 70px at var(--hx) var(--hy), rgb(var(--lg-hi) / calc(0.20 * (var(--lg-hs) + var(--lg-gl) * 0.5))), transparent),
+    /* directional sweep from the lit edge */
+    linear-gradient(calc(var(--lg-ang) + 180deg),
+      rgb(var(--lg-hi) / calc(var(--lg-sweep) * (0.72 + 0.28 * var(--lg-gl)))) 0%,
+      rgb(var(--lg-hi) / calc(var(--lg-sweep) * 0.3 * (0.72 + 0.28 * var(--lg-gl)))) 30%,
+      transparent 62%),
+    /* caustic pooling on the far edge */
+    linear-gradient(var(--lg-ang),
+      rgb(var(--lg-far) / calc(var(--lg-caustic) * (0.72 + 0.28 * var(--lg-gl)))) 0%,
+      transparent 28%);
+  background-repeat: no-repeat;
+  background-position: var(--lg-px) var(--lg-py), 0 0, 0 0, 0 0;
+  background-size: calc(var(--lg-rr) * var(--lg-rp) * 2) calc(var(--lg-rr) * var(--lg-rp) * 2), 100% 100%, 100% 100%, 100% 100%;
+}
+
+/* rim light — a 1.25px ring just inside the border, above the content */
+.liquid::after, .glass-strong::after, .glass-clear::after,
+.glass-interactive::after, .liquid-sheen::after {
+  z-index: 2;
+  padding: 1.25px;
+  background:
+    conic-gradient(from calc(var(--lg-ang) - 75deg),
+      rgb(var(--lg-hi) / 0) 0deg,
+      rgb(var(--lg-cool) / calc(var(--lg-rim) * 0.42 * (0.72 + 0.28 * var(--lg-gl)))) 32deg,
+      rgb(var(--lg-hi) / calc(var(--lg-rim) * (0.72 + 0.28 * var(--lg-gl)))) 75deg,
+      rgb(var(--lg-warm) / calc(var(--lg-rim) * 0.42 * (0.72 + 0.28 * var(--lg-gl)))) 118deg,
+      rgb(var(--lg-hi) / 0) 152deg,
+      rgb(var(--lg-hi) / 0) 212deg,
+      rgb(var(--lg-far) / calc(var(--lg-rim-far) * (0.72 + 0.28 * var(--lg-gl)))) 255deg,
+      rgb(var(--lg-hi) / 0) 298deg,
+      rgb(var(--lg-hi) / 0) 360deg),
+    linear-gradient(rgb(var(--lg-hi) / var(--lg-rim-base)), rgb(var(--lg-hi) / var(--lg-rim-base)));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Standalone material hooks — for surfaces that manage their own background
+   (e.g. the sidebar's --sidebar token) but still want the same light model.
+   Apply alongside backdrop-blur-* / backdrop-saturate-* utilities. */
+
+
+/* ---- .glass-interactive: real Liquid Glass motion for controls ---- */
+.glass-interactive {
+  --hx: 30%; --hy: 20%;           /* glint position — follows the pointer */
+  --hx-soft: 35%; --hy-soft: 30%; /* laggy follower (drives the light direction) */
+  --rx: 0deg; --ry: 0deg;         /* pointer-driven tilt, from theme-provider.tsx */
+  --lg-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --lg-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  transform: perspective(650px) rotateX(var(--rx)) rotateY(var(--ry)) scale(1);
+  transition: transform 0.6s var(--lg-settle), box-shadow 0.3s ease, --lg-hs 0.35s ease;
+}
+/* A permanent `will-change: transform` on every card meant a dozen full-size,
+   backdrop-filtered GPU layers sitting idle. Promote only while one is in use. */
+.glass-interactive:hover,
+.glass-interactive:active,
+.glass-interactive.lg-rippling { will-change: transform; }
+.glass-interactive:active {
+  /* same rotation as resting — a press should never snap tilt back to flat
+     mid-gesture, per the skill's motion guidance */
+  transform: perspective(650px) rotateX(var(--rx)) rotateY(var(--ry)) scale(0.96);
+  transition: transform 0.15s var(--lg-spring), --lg-hs 0.15s ease;
+}
+/* Controls wake their glint on hover / focus / press (and for the length of a ripple). */
+.glass-interactive:hover,
+.glass-interactive:focus-visible,
+.glass-interactive:active,
+.glass-interactive.lg-rippling { --lg-hs: 1; }
+/* Big content cards catch only a hint of it — the glint is a control affordance first. */
+.card-premium.glass-interactive:hover,
+.card-premium.glass-interactive:focus-within { --lg-hs: 0.4; }
+/* Absolutely-positioned ::before/::after need a positioning context. Only
+   set it when nothing else already establishes one — .glass/.glass-strong
+   set their own `position: relative`, and call sites that need `fixed` or
+   `absolute` (the FAB, Dialog, Popover) set that themselves, both of which
+   must win over this. */
+.glass-interactive:not(.glass):not(.glass-strong):not(.fixed):not(.absolute) {
+  position: relative;
+}
+/* Press state must also cancel Tailwind's separate `active:scale-*`
+   utility (a distinct CSS `scale` property in Tailwind v4, not part of
+   `transform`) — left alone, it compounds with the scale already baked
+   into this rule's `transform`. */
+.glass-interactive:active { scale: 1; }
+
+/* A chunky surface that still carries .glass-interactive (older call sites) must not tilt, glint or
+   spring — it presses into its ledge instead. */
+.glass.glass-interactive, .card-premium.glass-interactive {
+  transform: none !important;
+  transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.14s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, border-color 0.2s ease;
+  will-change: auto !important;
+}
+.glass.glass-interactive::before, .glass.glass-interactive::after,
+.card-premium.glass-interactive::before, .card-premium.glass-interactive::after { display: none; }
+button.glass.glass-interactive:active, a.glass.glass-interactive:active, [role="button"].glass.glass-interactive:active,
+button.card-premium.glass-interactive:active, a.card-premium.glass-interactive:active {
+  transform: translateY(var(--ledge)) !important;
+}
+
+/* ---- Concentric corner radius ----
+   inner = max(outer - padding, 0), per the skill's formula — never an
+   eyeballed fixed radius on a shape nested inside another rounded shape. */
+.glass-concentric {
+  --lg-outer-radius: 20px;
+  --lg-pad: 8px;
+  border-radius: var(--lg-outer-radius);
+}
+.glass-concentric-child {
+  border-radius: calc(max(var(--lg-outer-radius) - var(--lg-pad), 0px));
+}
+
+/* ---- Tier B: real edge lensing (Chromium-only progressive enhancement) ----
+   Inert everywhere else — Safari/Firefox parse backdrop-filter: url(#id) as
+   valid CSS, just don't render the distortion, so these rules are additive
+   on top of Tier A rather than something that needs its own fallback value.
+   Gated on .supports-glass-refraction, toggled once at runtime by
+   ThemeProvider after a UA check (there's no feature-detection query for
+   this specific capability yet). Three size classes because the
+   displacement map's <rect> has to be roughly shaped like the element it's
+   distorting — pick by rough footprint, not by which .glass-* is underneath:
+     sm  → buttons, pills, badges, the FAB, museum HUD buttons
+     md  → cards, popovers, dropdowns, museum overlay panels
+     lg  → the sidebar, dialogs, sheets
+   Blur stays low (the SVG filter already does the optical work); saturate
+   stays high to sell "this is glass," not just "this is blurred."
+
+   PERFORMANCE: only -lg is switched on. An SVG displacement filter is a
+   per-pixel effect the compositor has to redo whenever anything behind the
+   element changes, and with it on every card (-md) and button (-sm) a normal
+   screen carried 20+ of them — the single biggest cause of the app feeling
+   jittery. The bend is only really visible on big surfaces over content
+   (sidebar, sheets, the search overlay, the dashboard hero), so those keep it;
+   -sm / -md now fall through to the plain Tier A blur of their .glass* class
+   (the class names stay on the components so this can be tuned from one place).
+   Also switched off entirely below the "high" quality level (theme-provider.tsx). */
+.supports-glass-refraction .glass-refract-lg {
+  backdrop-filter: url(#lg-distort-lg) blur(12px) saturate(190%) brightness(1.05);
+}
+/* ---- Accessibility: must survive maximum transparency ----
+   The single lesson the whole industry learned from Liquid Glass's 2025-26
+   legibility saga — see the skill's 01-design-philosophy.md. These are
+   deliberately !important: a correctness guarantee, not a style to be
+   quietly overridden by a more-specific selector somewhere else. */
+@media (prefers-reduced-transparency: reduce) {
+  .liquid, .glass-strong, .glass-clear, .glass-interactive,
+  .glass-refract-sm, .glass-refract-md, .glass-refract-lg {
+    backdrop-filter: none !important;
+    background-color: var(--card) !important;
+  }
+}
+/* ---- Performance: touch-primary devices get a lighter blur ----
+   backdrop-filter isn't a one-time cost — it recomposites everything
+   behind the element every frame it's on screen, and this app stacks it
+   on a lot of simultaneous surfaces (sidebar + header + a sheet/dialog +
+   the museum's WebGL canvas underneath all of it, worst case). Desktop
+   GPUs shrug this off; phone GPUs visibly don't, and that gap reads as
+   "clanky" scrolling/opening exactly where it'd be reported. `pointer:
+   coarse` targets touch-primary hardware specifically, not just a narrow
+   window, so a touchscreen laptop with a mouse attached is unaffected.
+   Cutting blur radius roughly in half is the cheap, safe lever per the
+   skill's performance guidance — saturate() is comparatively inexpensive
+   so it's left alone; the optical read stays "glass," just lighter. */
+@media (pointer: coarse) {
+  .liquid {
+    backdrop-filter: blur(11px) saturate(160%) brightness(1.05);
+  }
+  .glass-strong {
+    backdrop-filter: blur(15px) saturate(180%) brightness(1.04);
+  }
+  .glass-clear {
+    backdrop-filter: blur(8px) saturate(190%) brightness(1.06);
+  }
+}
+@media (prefers-contrast: more) {
+  .liquid, .glass-strong, .glass-clear, .glass-interactive {
+    border-width: 1.5px !important;
+    border-color: var(--foreground) !important;
+  }
+  .liquid::before, .liquid::after, .glass-strong::before, .glass-strong::after,
+  .glass-clear::before, .glass-clear::after,
+  .glass-interactive::before, .glass-interactive::after, .liquid-sheen::before, .liquid-sheen::after {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-interactive {
+    transition: none !important;
+    transform: none !important;
+  }
+  .glass-interactive { --lg-hs: 0 !important; }
+}
+
+/* ---- .lg-dyn: input-reactive layer (liquid-glass-engine.ts) ----
+   Only ever active while html carries .lg-dyn — added by the engine at
+   start, removed on cleanup (Settings → Appearance → "Glass reacts to
+   input", off by default under prefers-reduced-motion). The press ripple,
+   glint and "catches the light" response all live in the material layers
+   above now (driven by the variables the engine writes), so the only thing
+   left to do here is hand the transform over to the spring loop. */
+
+/* Press/tilt hand fully over to the spring loop instead of a CSS
+   transition — a transition restarting every frame against a value the
+   engine is ALSO updating every frame is exactly the stutter the skill
+   warns about, and the spring already supplies its own smoothing/overshoot.
+   (box-shadow keeps its own transition; only transform changes here.) */
+.lg-dyn .glass-interactive,
+.lg-dyn .glass-interactive:active {
+  transform: perspective(650px) rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--lg-sc));
+  transition: box-shadow 0.3s ease, --lg-hs 0.35s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Belt-and-braces: the engine itself never starts under reduced-motion,
+     so .lg-dyn should never be present here — but if a person changes the
+     OS setting mid-session before the next mount, don't leave stale spring
+     values driving a transform contradicting `transform: none` above. */
+  .lg-dyn .glass-interactive, .lg-dyn .glass-interactive:active { transform: none !important; }
+}
+
+/* ===== Custom scrollbar ===== */
+.scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-thin::-webkit-scrollbar-track { background: transparent; }
+.scroll-thin::-webkit-scrollbar-thumb { background: color-mix(in oklch, var(--muted-foreground) 35%, transparent); border-radius: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb:hover { background: color-mix(in oklch, var(--muted-foreground) 55%, transparent); }
+
+/* ===== Animations ===== */
+@keyframes float-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pop-in { 0% { opacity: 0; transform: scale(0.92); } 60% { transform: scale(1.03); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes glow-pulse { 0%, 100% { box-shadow: 0 0 20px var(--glow); } 50% { box-shadow: 0 0 40px var(--glow); } }
+@keyframes confetti-fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+@keyframes xp-float { 0% { opacity: 0; transform: translateY(0) scale(0.8); } 20% { opacity: 1; transform: translateY(-10px) scale(1.1); } 100% { opacity: 0; transform: translateY(-60px) scale(1); } }
+
+.animate-float-up { animation: float-up 0.4s ease-out both; }
+.animate-pop-in { animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.animate-glow { animation: glow-pulse 2.4s ease-in-out infinite; }
+.animate-xp-float { animation: xp-float 1s ease-out both; }
+
+/* Hit-reaction shake — brief and small on purpose. Combat feedback should
+   read as impact, not seasick the whole card. Respects the reduced-motion
+   block below like every other animation here. */
+@keyframes shake-x { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-6px) rotate(-0.5deg); } 40% { transform: translateX(5px) rotate(0.5deg); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+.animate-shake { animation: shake-x 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+
+/* One-shot "correct answer" feedback — a quick confident pulse, distinct
+   from .animate-glow (which loops forever and is for ambient emphasis,
+   not a momentary reaction). Used on MCQ/quiz options, diagram-practice
+   checklist ticks, and anywhere else a single right-answer moment needs
+   to feel good without looping. */
+@keyframes correct-pop {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 oklch(0.72 0.17 150 / 45%); }
+  35% { transform: scale(1.025); box-shadow: 0 0 0 8px oklch(0.72 0.17 150 / 20%); }
+  100% { transform: scale(1); box-shadow: 0 0 0 14px oklch(0.72 0.17 150 / 0%); }
+}
+.animate-correct-pop { animation: correct-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes check-in { 0% { opacity: 0; transform: scale(0.3) rotate(-15deg); } 60% { transform: scale(1.2) rotate(4deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
+.animate-check-in { animation: check-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* Gentle breathing motion for ambient/focus surfaces (Pomodoro ring). Slow
+   and subtle by design — this runs continuously behind a study session,
+   so it needs to recede into the background, not compete for attention. */
+@keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.55; } 50% { transform: scale(1.06); opacity: 0.85; } }
+.animate-breathe { animation: breathe 4.5s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--foreground) 8%, transparent), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* ===== Subject color helpers ===== */
+.subj-chem { --sc: var(--color-chem); }
+.subj-bio { --sc: var(--color-bio); }
+.subj-phy { --sc: var(--color-phy); }
+.subj-hist { --sc: var(--color-hist); }
+.subj-geo { --sc: var(--color-geo); }
+.subj-polsci { --sc: var(--color-polsci); }
+.subj-eco { --sc: var(--color-eco); }
+.subj-maths { --sc: var(--color-maths); }
+.subj-english { --sc: var(--color-english); }
+.subj-sanskrit { --sc: var(--color-sanskrit); }
+
+.text-subj { color: var(--sc); }
+.bg-subj-dim { background: color-mix(in oklch, var(--sc) 12%, transparent); }
+.border-subj { border-color: color-mix(in oklch, var(--sc) 50%, var(--edge)); --ledge-c: color-mix(in oklch, var(--sc) 50%, var(--edge)); }
+
+/* Generic tone helpers (same pattern as subject colors) for non-subject accents, e.g. stat tiles */
+.tone-gold { --sc: oklch(0.8 0.17 80); }
+.tone-emerald { --sc: oklch(0.75 0.18 150); }
+.tone-sky { --sc: oklch(0.75 0.15 230); }
+.tone-orange { --sc: oklch(0.75 0.18 50); }
+.tone-rose { --sc: oklch(0.7 0.19 20); }
+
+/* ===== Premium depth & motion layer ===== */
+
+/* Elevation shadows — layered, not flat */
+.shadow-elevate-1 { box-shadow: 0 1px 2px color-mix(in oklch, black 12%, transparent), 0 2px 8px color-mix(in oklch, black 8%, transparent); }
+.shadow-elevate-2 { box-shadow: 0 2px 4px color-mix(in oklch, black 10%, transparent), 0 8px 24px color-mix(in oklch, black 14%, transparent); }
+.shadow-elevate-3 { box-shadow: 0 4px 10px color-mix(in oklch, black 12%, transparent), 0 16px 48px color-mix(in oklch, black 20%, transparent); }
+
+/* Soft halo in the current subject/primary color — for focal or hovered elements */
+.glow-ring { border-color: color-mix(in oklch, var(--sc, var(--primary)) 45%, var(--edge)); --ledge-c: color-mix(in oklch, var(--sc, var(--primary)) 45%, var(--edge)); }
+.glow-ring-hover { transition: box-shadow 0.25s ease, border-color 0.25s ease; }
+.glow-ring-hover:hover { border-color: color-mix(in oklch, var(--sc, var(--primary)) 50%, var(--edge)); }
+
+/* ===== Neon signature ===== */
+/* A quiet, ALWAYS-ON cyan edge for surfaces that should read as "this app's
+   material" even before anyone touches them — the sidebar rail, the hero
+   card, primary CTAs. Deliberately gentle at rest (per the skill's "resting
+   state stays quiet" rule for the *interactive* specular layer above) —
+   this is a separate, much cheaper signal: a steady glow that says what
+   the material is, not a response to touch. Pair with .glow-ring-hover for
+   a surface that should also brighten further on hover. */
+.neon-frame {
+  border-color: color-mix(in oklch, var(--sc, var(--primary)) 55%, var(--edge));
+  --ledge-c: color-mix(in oklch, var(--sc, var(--primary)) 55%, var(--edge));
+}
+
+/* Neon sign text — a soft layered glow behind the glyphs themselves,
+   reserved for the handful of headline/hero moments that should read as
+   lit from within (the app wordmark, a level-up number, an active stat).
+   Layer three shadow radii, tightest-brightest to widest-faintest, the
+   way a real gas-tube sign bleeds light outward rather than having one
+   uniform blur. Never use this for body copy — bloom this size fights
+   legibility below ~20px. */
+.text-neon {
+  color: var(--sc, var(--primary));
+}
+
+/* Animated conic "energy" ring — a slow rotating cyan gradient traced
+   around a pill/circle border, for the single most important live-state
+   indicator on a screen (XP ring, streak flame, the museum's active
+   exhibit marker). Uses a real @property so the angle animates smoothly
+   instead of snapping between keyframe stops. */
+@property --neon-spin-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.neon-spin {
+  position: relative;
+}
+.neon-spin::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from var(--neon-spin-angle), transparent 0deg, color-mix(in oklch, var(--sc, var(--primary)) 70%, transparent) 70deg, transparent 140deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: neon-spin-rotate 2.6s linear infinite;
+  pointer-events: none;
+}
+@keyframes neon-spin-rotate { to { --neon-spin-angle: 360deg; } }
+@media (prefers-reduced-motion: reduce) {
+  .neon-spin::before { animation: none; }
+}
+
+/* .card-premium is a content surface now — see "The two layers" above. */
+
+/* Tactile press/lift for buttons and tap targets */
+.tap-lift { transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease, border-color 0.18s ease; }
+.tap-lift:hover { transform: translateY(-2px) scale(1.015); }
+.tap-lift:active { transform: translateY(0) scale(0.97); transition-duration: 0.08s; }
+
+/* Lighter-weight press feedback for compact/inline controls (icon
+   buttons, nav rows, list items) where .tap-lift's -2px hover lift would
+   read as too much motion for something that small. Scale only, no
+   translate — genuinely "minuscule". */
+.press-scale { transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1); }
+.press-scale:hover { transform: scale(1.05); }
+.press-scale:active { transform: scale(0.94); transition-duration: 0.08s; }
+
+/* Icon micro-nudge — a small, playful lift+tilt on the icon inside a
+   hovered control (nav items, icon buttons), the same texture as iOS
+   icons giving a little life on touch. Put this on the icon itself, not
+   its wrapper, and pair with a hover: on an ancestor with `group`. */
+.icon-nudge { transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.group:hover .icon-nudge { transform: translateY(-1px) scale(1.08); }
+.group:active .icon-nudge { transform: scale(0.92); }
+
+/* Numeral entrance — used once on mount for animated stat counters */
+@keyframes numeral-in { 0% { opacity: 0; transform: translateY(6px) scale(0.9); filter: blur(4px); } 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+.animate-numeral { animation: numeral-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Staggered section entrance cascade */
+@keyframes rise-in { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: translateY(0); } }
+.animate-rise { animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.stagger-1 { animation-delay: 0.05s; } .stagger-2 { animation-delay: 0.1s; } .stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; } .stagger-5 { animation-delay: 0.25s; } .stagger-6 { animation-delay: 0.3s; } .stagger-7 { animation-delay: 0.35s; }
+
+/* Soft blurred glow blob for ambient background depth */
+.ambient-orb { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: 0.16; pointer-events: none; }
+
+/* Radial spotlight vignette behind hero/focal numerals */
+.spotlight { background: radial-gradient(60% 60% at 50% 40%, color-mix(in oklch, var(--sc, var(--primary)) 8%, transparent), transparent 70%); }
+
+/* Gradient text for hero headings */
+.text-gradient-primary {
+  background: linear-gradient(135deg, var(--primary), var(--sc, var(--chart-2)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Fine grain texture for material depth on premium surfaces (very subtle, additive overlay) */
+
+.grain::before {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Glowing gradient meter — replaces flat progress bars */
+.meter-track { position: relative; height: 0.75rem; border-radius: 9999px; background: color-mix(in oklch, var(--edge) 70%, var(--background)); overflow: hidden; }
+.meter-fill {
+  position: relative;
+  height: 100%; border-radius: 9999px;
+  background: var(--sc, var(--primary));
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* the little highlight stripe that makes a Duolingo bar read as a glossy tube */
+.meter-fill::after, .duo-shine {
+  content: ""; position: absolute; left: 6px; right: 6px; top: 22%; height: 28%;
+  border-radius: 9999px; background: rgb(255 255 255 / 0.32); pointer-events: none;
+}
+
+/* Diagonal shine sweep on hover — for badges/medallions */
+.shine-sweep { position: relative; overflow: hidden; }
+.shine-sweep::after {
+  content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+  background: linear-gradient(115deg, transparent, color-mix(in oklch, white 35%, transparent), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+.shine-sweep:hover::after { left: 130%; }
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* flashcard 3d flip */
+.flip-3d { perspective: 1200px; }
+.flip-3d-inner { position: relative; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.flip-3d.flipped .flip-3d-inner { transform: rotateY(180deg); }
+.flip-3d-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-3d-back { transform: rotateY(180deg); }
+
+/* ===== Visual quality tiers =====
+   <html data-gfx="high|balanced|lite"> is set by theme-provider.tsx — from the
+   student's choice in Settings, or (under "Auto") from what gfx-governor.ts has
+   learned about this device's real frame rate.
+     high      everything above.
+     balanced  same material with a lighter blur; no SVG refraction (the class is
+               dropped in JS), and the pointer engine runs in its subtle mode.
+     lite      no backdrop-filter at all — the single most expensive thing on the
+               page. Panels become near-opaque fills (they keep their rim light and
+               shadows), the aurora is drawn once, and decorative loops stop. */
+html[data-gfx="balanced"] :is(.liquid, .glass-strong, .glass-clear, .liquid-sheen) {
+  backdrop-filter: blur(12px) saturate(150%) !important;
+}
+html[data-gfx="lite"] :is(.liquid, .glass-strong, .glass-clear, .liquid-sheen, [class*="glass-refract"], [class*="backdrop-blur"]) {
+  backdrop-filter: none !important;
+}
+html[data-gfx="lite"] :is(.liquid, .glass-clear, .liquid-sheen) {
+  background-color: color-mix(in oklch, var(--card) 90%, transparent) !important;
+}
+html[data-gfx="lite"] .glass-strong { background-color: var(--card) !important; }
+html[data-gfx="lite"] :is(.animate-glow, .animate-breathe) { animation: none !important; }
+html[data-gfx="lite"] .neon-spin::before { animation: none !important; }
+
+
+/* =====================================================================
+   Duolingo layer — answer choices, feedback tones, the dock
+   ===================================================================== */
+:root {
+  --success: oklch(0.74 0.22 135);
+  --success-ledge: oklch(0.56 0.19 138);
+  --danger: oklch(0.68 0.21 25);
+  --danger-ledge: oklch(0.52 0.19 25);
+  --gold: oklch(0.86 0.17 90);
+  --gold-ledge: oklch(0.7 0.15 80);
+}
+
+/* ---- Answer choice: a chunky, keyboard-key-like tile ---- */
+.choice {
+  border: 2px solid var(--edge);
+  border-radius: 1rem;
+  background-color: var(--card);
+  box-shadow: 0 var(--ledge) 0 0 var(--edge);
+  cursor: pointer;
+  transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.14s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.18s ease, border-color 0.18s ease, opacity 0.2s ease;
+}
+@media (hover: hover) {
+  .choice:hover:not(:disabled) {
+    background-color: color-mix(in oklch, var(--card) 92%, var(--foreground) 8%);
+    border-color: color-mix(in oklch, var(--primary) 55%, var(--edge));
+    box-shadow: 0 var(--ledge) 0 0 color-mix(in oklch, var(--primary) 55%, var(--edge));
+  }
+}
+.choice:active:not(:disabled) { transform: translateY(var(--ledge)); box-shadow: 0 0 0 0 transparent; }
+.choice:focus-visible { outline: 3px solid color-mix(in oklch, var(--primary) 55%, transparent); outline-offset: 2px; }
+.choice-correct {
+  background-color: color-mix(in oklch, var(--success) 18%, var(--card)) !important;
+  border-color: var(--success) !important;
+  box-shadow: 0 var(--ledge) 0 0 var(--success-ledge) !important;
+}
+.choice-wrong {
+  background-color: color-mix(in oklch, var(--danger) 18%, var(--card)) !important;
+  border-color: var(--danger) !important;
+  box-shadow: 0 var(--ledge) 0 0 var(--danger-ledge) !important;
+}
+.choice-dim { opacity: 0.5; box-shadow: none !important; transform: translateY(var(--ledge)); cursor: default; }
+.choice-key {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 1.9rem; height: 1.9rem; border-radius: 0.6rem;
+  border: 2px solid var(--edge); font-size: 0.8rem; font-weight: 800; color: var(--muted-foreground);
+}
+.choice-correct .choice-key { border-color: var(--success); background: var(--success); color: oklch(0.2 0.06 140); }
+.choice-wrong .choice-key { border-color: var(--danger); background: var(--danger); color: white; }
+
+/* ---- Answer sheet: tinted Liquid Glass that rises from the bottom after you answer ----
+   Duolingo's feedback bar, rebuilt as the thing Liquid Glass is actually for: a transient
+   functional surface over content. The tint is the verdict; the blur keeps the question visible. */
+.answer-sheet {
+  --tone: var(--success);
+  position: fixed; z-index: 60;
+  left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
+  width: min(44rem, calc(100% - 1.5rem));
+  max-height: min(60vh, 28rem); overflow-y: auto; overscroll-behavior: contain;
+  translate: -50% 0;
+  border-radius: 28px; padding: 1.1rem 1.25rem 1.25rem;
+  background-color: color-mix(in oklch, var(--tone) 24%, color-mix(in oklch, var(--card) 62%, transparent));
+  backdrop-filter: blur(26px) saturate(185%) brightness(1.04);
+  border: 1px solid color-mix(in oklch, var(--tone) 55%, rgb(255 255 255 / 0.25));
+  box-shadow:
+    inset 0 1.5px 0 0 rgb(255 255 255 / 0.5),
+    inset 0 -1px 0 0 rgb(0 0 0 / 0.18),
+    inset 0 0 26px -8px color-mix(in oklch, var(--tone) 60%, white),
+    0 24px 60px -16px color-mix(in oklch, var(--tone) 55%, black);
+  animation: sheet-rise 0.46s cubic-bezier(0.34, 1.4, 0.5, 1) both;
+}
+.answer-sheet[data-tone="wrong"] { --tone: var(--danger); }
+@media (min-width: 1024px) { .answer-sheet { left: calc(50% + 7.5rem); } }
+@keyframes sheet-rise { from { opacity: 0; transform: translateY(40px) scale(0.96); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-transparency: reduce) { .answer-sheet { backdrop-filter: none; background-color: color-mix(in oklch, var(--tone) 26%, var(--card)); } }
+
+/* ---- Dock: the floating glass tab bar with a morphing selection bubble ---- */
+.dock {
+  position: fixed; z-index: 40;
+  left: 0.75rem; right: 0.75rem; margin-inline: auto; max-width: 28rem;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
+  border-radius: 30px; padding: 6px;
+}
+.dock-bubble {
+  position: absolute; inset: 0; border-radius: 24px; /* concentric: 30px dock - 6px padding */
+  background: color-mix(in oklch, var(--primary) 26%, rgb(255 255 255 / 0.06));
+  border: 1px solid color-mix(in oklch, var(--primary) 60%, rgb(255 255 255 / 0.3));
+  box-shadow: inset 0 1.5px 0 0 rgb(255 255 255 / 0.45), inset 0 -6px 12px -6px color-mix(in oklch, var(--primary) 50%, transparent), 0 6px 16px -6px color-mix(in oklch, var(--primary) 55%, black);
+}
+
+/* ---- Stat pills (streak / XP / coins) ---- */
+.stat-pill {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-weight: 800; font-variant-numeric: tabular-nums; font-size: 0.85rem;
+  padding: 0.3rem 0.65rem; border-radius: 9999px;
+}
+
+/* Positioning context for the pseudo-layers — in the base layer so Tailwind's fixed/sticky/absolute win. */
+@layer base { .glass, .card-premium, .liquid, .glass-strong, .glass-clear, .liquid-sheen, .grain { position: relative; } }
+
+/* inside the answer sheet the old bordered explanation box just reads as text on glass, and Next is a full-width key */
+.answer-sheet [class*="bg-muted"] { background: transparent !important; border: 0 !important; padding: 0.25rem 0 !important; margin-top: 0 !important; }
+.answer-sheet .justify-end { justify-content: stretch; }
+.answer-sheet .justify-end > button { width: 100%; }
+.answer-sheet [class*="ml-auto"][class*="border"] { display: none; } /* the header already says Correct / Not quite */
+@media (max-width: 640px) {
+  .answer-sheet { max-height: 40vh; padding: 0.85rem 1rem 1rem; border-radius: 24px; }
+  .answer-sheet [class*="flex-wrap"] { gap: 0.35rem; font-size: 11px; }
+  .answer-sheet [class*="flex-wrap"] button { height: 1.75rem; padding-inline: 0.6rem; }
+}
+
+/* ---- Learning path nodes ---- */
+.path-node {
+  background: var(--nf); color: var(--nfg); box-shadow: 0 6px 0 0 var(--nl);
+  font-size: 1.35rem; font-weight: 900; font-variant-numeric: tabular-nums;
+  transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.14s cubic-bezier(0.22, 1, 0.36, 1), filter 0.2s ease;
+}
+@media (hover: hover) { .path-node:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 8px 0 0 var(--nl); } }
+.path-node:active { transform: translateY(6px); box-shadow: 0 0 0 0 var(--nl); }
+.path-node[aria-expanded="true"] { outline: 3px solid color-mix(in oklch, var(--sc, var(--primary)) 55%, transparent); outline-offset: 5px; }
+.path-start { animation: path-nudge 1.6s ease-in-out infinite; }
+.path-start::after { /* the little speech-bubble tail, pointing at the node */
+  content: ""; position: absolute; top: 50%; width: 10px; height: 10px; translate: 0 -50%; rotate: 45deg; background: inherit;
+}
+.path-start[data-side="left"]::after { right: -5px; border-top: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); }
+.path-start[data-side="right"]::after { left: -5px; border-bottom: 1px solid var(--glass-border); border-left: 1px solid var(--glass-border); }
+@keyframes path-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(var(--nudge, 5px)); } }
+.path-start[data-side="left"] { --nudge: 5px; }
+.path-start[data-side="right"] { --nudge: -5px; }
+.path-pulse { animation: path-pulse 1.9s ease-out infinite; }
+@keyframes path-pulse { 0% { transform: scale(1); opacity: 0.45; } 100% { transform: scale(1.45); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .path-start, .path-pulse { animation: none; } .path-pulse { display: none; } }
+
+/* ---- Legibility floor ----
+   Muted text at reduced opacity (text-muted-foreground/50, /60, /70) was written for a pure-black canvas;
+   on the navy theme most of it measured 3:1 or less. Floor it at AA without touching hover/focus states. */
+[class*="text-muted-foreground/"]:not(:hover):not(:focus-visible) { color: color-mix(in oklch, var(--muted-foreground) 90%, transparent); }
+.card-premium[class*="opacity-60"], .glass[class*="opacity-60"], .card-premium[class*="opacity-50"] { opacity: 0.74; }
+
+
+/* Next stays reachable: a long explanation scrolls UNDER a pinned Next key instead of pushing it out of view. */
+.answer-sheet .justify-end { position: sticky; bottom: -1.25rem; margin-inline: -0.25rem; padding: 0.6rem 0.25rem 0.25rem; z-index: 1;
+  background: linear-gradient(to top, color-mix(in oklch, var(--tone) 30%, var(--card)) 62%, transparent); }
+.answer-sheet .justify-end > button { text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ---- Lesson complete: mascot bounce + confetti ---- */
+.mascot-bounce { animation: mascot-bounce 1.7s cubic-bezier(0.34, 1.4, 0.5, 1) infinite; transform-origin: 50% 100%; }
+@keyframes mascot-bounce { 0%, 100% { transform: translateY(0) scale(1, 1); } 45% { transform: translateY(-9px) scale(0.98, 1.03); } 62% { transform: translateY(0) scale(1.03, 0.97); } }
+.confetti-piece { position: absolute; top: -14px; width: 8px; height: 14px; border-radius: 2px; animation: confetti-fall var(--d, 3s) cubic-bezier(0.25, 0.6, 0.4, 1) var(--dl, 0s) both; }
+@keyframes confetti-fall { to { transform: translate3d(var(--dx, 0), 460px, 0) rotate(var(--r, 360deg)); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .mascot-bounce { animation: none; } .confetti-piece { display: none; } }
+
+/* ---- Select, then Check ---- */
+.choice-picked {
+  background-color: color-mix(in oklch, var(--primary) 16%, var(--card)) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 var(--ledge) 0 0 var(--primary-ledge) !important;
+}
+.choice-picked .choice-key { border-color: var(--primary); background: var(--primary); color: var(--primary-foreground); }
+.check-bar {
+  position: fixed; z-index: 45; left: 50%; translate: -50% 0;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
+  width: min(44rem, calc(100% - 1.5rem)); padding: 0.6rem; border-radius: 26px;
+}
+@media (min-width: 1024px) { .check-bar { left: calc(50% + 7.5rem); } }
+
+/* ---- Themed text colours: bright accents are fine as FILLS, but as TEXT on white they measure ~2:1 ---- */
+:root { --fire: #ff9600; --gold-text: #ffc800; --atm: 100%; }
+[data-theme="daylight"] { --fire: #b45f00; --gold-text: #8a6200; --atm: 56%; }
+[data-theme="daylight"] .text-primary, [data-theme="daylight"] .text-neon { color: color-mix(in oklch, var(--sc, var(--primary)) var(--atm), black); }
+
+/* ---- The streak flame is alive ---- */
+.flame-flicker { animation: flame-flicker 1.7s ease-in-out infinite; transform-origin: 50% 90%; }
+@keyframes flame-flicker { 0%, 100% { transform: scale(1) rotate(0deg); } 30% { transform: scale(1.12, 1.2) rotate(-5deg); } 62% { transform: scale(0.96, 1.06) rotate(4deg); } }
+@media (prefers-reduced-motion: reduce) { .flame-flicker { animation: none; } }
+
+/* Ash idles with a slow, confident float (the old cartoon bounce read as childish) */
+.mascot-float { animation: mascot-float 4.2s ease-in-out infinite; }
+@keyframes mascot-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@media (prefers-reduced-motion: reduce) { .mascot-float { animation: none; } }
+
+/* =====================================================================
+   Professional refinement layer
+   Calm neutral surfaces, hairline borders, soft shadows, regular-weight type. This block deliberately comes
+   last so it overrides the earlier chunky/playful treatment without disturbing the structure around it.
+   ===================================================================== */
+:root, [data-theme="midnight"] {
+  --radius: 0.75rem;
+  --primary: var(--user-accent, oklch(0.7 0.15 165));
+  --primary-foreground: var(--user-accent-fg, oklch(0.18 0.04 165));
+  --background: oklch(0.165 0.012 255);
+  --foreground: oklch(0.955 0.005 255);
+  --card: oklch(0.205 0.013 255);
+  --card-foreground: oklch(0.955 0.005 255);
+  --popover: oklch(0.235 0.014 255);
+  --popover-foreground: oklch(0.955 0.005 255);
+  --secondary: oklch(0.255 0.014 255);
+  --secondary-foreground: oklch(0.95 0.005 255);
+  --muted: oklch(0.235 0.012 255);
+  --muted-foreground: oklch(0.72 0.014 255);
+  --accent: oklch(0.275 0.015 255);
+  --accent-foreground: oklch(0.97 0.004 255);
+  --edge: oklch(0.31 0.014 255);
+  --border: oklch(0.31 0.014 255);
+  --input: oklch(0.255 0.014 255);
+  --sidebar: oklch(0.185 0.012 255);
+  --sidebar-foreground: oklch(0.93 0.005 255);
+  --sidebar-accent: oklch(0.25 0.014 255);
+  --sidebar-border: oklch(0.29 0.013 255);
+  --glass: oklch(1 0 0 / 6%);
+  --glass-border: oklch(1 0 0 / 11%);
+  --success: oklch(0.72 0.16 160);
+  --danger: oklch(0.67 0.19 22);
+  --gold: oklch(0.82 0.14 85);
+  --ledge: 0px;
+}
+[data-theme="daylight"] {
+  --background: oklch(0.982 0.003 255);
+  --foreground: oklch(0.22 0.015 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.015 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.015 260);
+  --secondary-foreground: oklch(0.25 0.015 260);
+  --accent-foreground: oklch(0.2 0.015 260);
+  --sidebar-foreground: oklch(0.25 0.015 260);
+  --secondary: oklch(0.96 0.004 255);
+  --muted: oklch(0.96 0.004 255);
+  --muted-foreground: oklch(0.45 0.014 260);
+  --accent: oklch(0.945 0.006 255);
+  --edge: oklch(0.9 0.006 255);
+  --border: oklch(0.9 0.006 255);
+  --input: oklch(0.93 0.005 255);
+  --sidebar: oklch(0.975 0.004 255);
+  --sidebar-accent: oklch(0.95 0.006 255);
+  --sidebar-border: oklch(0.9 0.006 255);
+  --glass-border: oklch(0 0 0 / 8%);
+  --ledge: 0px;
+}
+
+/* cards: hairline border + soft shadow, no ledge */
+.glass, .card-premium {
+  border: 1px solid var(--ledge-c, var(--edge));
+  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.035), 0 14px 30px -20px rgb(0 0 0 / 0.6);
+}
+[data-theme="daylight"] .glass, [data-theme="daylight"] .card-premium { box-shadow: 0 1px 2px rgb(15 23 42 / 0.05), 0 10px 24px -16px rgb(15 23 42 / 0.18); }
+@layer base { .glass, .card-premium { border-radius: 14px; } h1, h2, h3, h4, h5, h6 { font-weight: 650; letter-spacing: -0.02em; } }
+button.glass:active, a.glass:active, [role="button"].glass:active, button.card-premium:active, a.card-premium:active, [role="button"].card-premium:active,
+button.glass.glass-interactive:active, a.glass.glass-interactive:active, button.card-premium.glass-interactive:active { transform: scale(0.992) !important; box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.035); }
+.font-extrabold { font-weight: 700; }
+.font-black { font-weight: 800; }
+
+/* answer options */
+.choice { border: 1px solid var(--edge); border-radius: 12px; box-shadow: none; }
+@media (hover: hover) { .choice:hover:not(:disabled) { box-shadow: none; border-color: color-mix(in oklch, var(--primary) 55%, var(--edge)); } }
+.choice:active:not(:disabled) { transform: scale(0.995); box-shadow: none; }
+.choice-picked { background-color: color-mix(in oklch, var(--primary) 10%, var(--card)) !important; border-color: var(--primary) !important; box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 20%, transparent) !important; }
+.choice-correct { background-color: color-mix(in oklch, var(--success) 12%, var(--card)) !important; border-color: var(--success) !important; box-shadow: 0 0 0 3px color-mix(in oklch, var(--success) 18%, transparent) !important; }
+.choice-wrong { background-color: color-mix(in oklch, var(--danger) 12%, var(--card)) !important; border-color: var(--danger) !important; box-shadow: 0 0 0 3px color-mix(in oklch, var(--danger) 18%, transparent) !important; }
+.choice-dim { transform: none; box-shadow: none !important; opacity: 0.5; }
+.choice-key { width: 1.75rem; height: 1.75rem; border-radius: 8px; border: 1px solid var(--edge); font-weight: 700; }
+.choice-picked .choice-key { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+.choice-correct .choice-key { background: var(--success); border-color: var(--success); color: oklch(0.18 0.04 160); }
+.choice-wrong .choice-key { background: var(--danger); border-color: var(--danger); color: #fff; }
+
+/* path nodes + meters */
+.path-node { box-shadow: 0 0 0 4px color-mix(in oklch, var(--nf) 20%, transparent), 0 10px 20px -10px rgb(0 0 0 / 0.65); font-size: 1.1rem; font-weight: 700; }
+@media (hover: hover) { .path-node:hover { transform: translateY(-1px); box-shadow: 0 0 0 5px color-mix(in oklch, var(--nf) 26%, transparent), 0 12px 22px -10px rgb(0 0 0 / 0.65); } }
+.path-node:active { transform: scale(0.96); box-shadow: 0 0 0 4px color-mix(in oklch, var(--nf) 20%, transparent); }
+.meter-track { height: 0.5rem; }
+.meter-fill::after, .duo-shine { display: none; }
+
+/* floating glass: tighter radii, sentence-case keys */
+.answer-sheet { border-radius: 20px; }
+.check-bar { border-radius: 18px; }
+.dock { border-radius: 24px; }
+.dock-bubble { border-radius: 18px; }
+.answer-sheet .justify-end > button { text-transform: none; letter-spacing: 0; }
+
+/* Light theme: Tailwind's 300–500 text colours are tuned for dark surfaces; on white they fall to 1.5–3:1.
+   Map them to their 700 shades so every coloured label stays readable. */
+[data-theme="daylight"] :is(.text-amber-300, .text-amber-400, .text-amber-500, .text-yellow-300, .text-yellow-400, .text-yellow-500) { color: #a16207; }
+[data-theme="daylight"] :is(.text-orange-300, .text-orange-400, .text-orange-500) { color: #c2410c; }
+[data-theme="daylight"] :is(.text-emerald-300, .text-emerald-400, .text-emerald-500, .text-green-300, .text-green-400, .text-green-500) { color: #047857; }
+[data-theme="daylight"] :is(.text-cyan-300, .text-cyan-400, .text-cyan-500, .text-teal-300, .text-teal-400, .text-teal-500) { color: #0e7490; }
+[data-theme="daylight"] :is(.text-sky-300, .text-sky-400, .text-sky-500, .text-blue-300, .text-blue-400, .text-blue-500) { color: #0369a1; }
+[data-theme="daylight"] :is(.text-rose-300, .text-rose-400, .text-rose-500, .text-red-300, .text-red-400, .text-red-500, .text-pink-300, .text-pink-400, .text-pink-500) { color: #be123c; }
+[data-theme="daylight"] :is(.text-violet-300, .text-violet-400, .text-violet-500, .text-purple-300, .text-purple-400, .text-purple-500, .text-indigo-300, .text-indigo-400, .text-indigo-500, .text-fuchsia-400) { color: #6d28d9; }
+
+/* Light theme: an accent used as inline TEXT colour (not as a fill) is darkened. Matches only the `color` property,
+   never border-color / background-color. */
+[data-theme="daylight"] [style^="color: rgb(56, 189, 248)"], [data-theme="daylight"] [style*="; color: rgb(56, 189, 248)"], [data-theme="daylight"] [style^="color:#38bdf8"], [data-theme="daylight"] [style*=";color:#38bdf8"], [data-theme="daylight"] [style^="color: #38bdf8"], [data-theme="daylight"] [style*="; color: #38bdf8"] { color: #0369a1 !important; }
+[data-theme="daylight"] [style^="color: rgb(167, 139, 250)"], [data-theme="daylight"] [style*="; color: rgb(167, 139, 250)"], [data-theme="daylight"] [style^="color:#a78bfa"], [data-theme="daylight"] [style*=";color:#a78bfa"], [data-theme="daylight"] [style^="color: #a78bfa"], [data-theme="daylight"] [style*="; color: #a78bfa"] { color: #6d28d9 !important; }
+[data-theme="daylight"] [style^="color: rgb(251, 146, 60)"], [data-theme="daylight"] [style*="; color: rgb(251, 146, 60)"], [data-theme="daylight"] [style^="color:#fb923c"], [data-theme="daylight"] [style*=";color:#fb923c"], [data-theme="daylight"] [style^="color: #fb923c"], [data-theme="daylight"] [style*="; color: #fb923c"] { color: #c2410c !important; }
+[data-theme="daylight"] [style^="color: rgb(244, 114, 182)"], [data-theme="daylight"] [style*="; color: rgb(244, 114, 182)"], [data-theme="daylight"] [style^="color:#f472b6"], [data-theme="daylight"] [style*=";color:#f472b6"], [data-theme="daylight"] [style^="color: #f472b6"], [data-theme="daylight"] [style*="; color: #f472b6"] { color: #be185d !important; }
+[data-theme="daylight"] [style^="color: rgb(251, 191, 36)"], [data-theme="daylight"] [style*="; color: rgb(251, 191, 36)"], [data-theme="daylight"] [style^="color:#fbbf24"], [data-theme="daylight"] [style*=";color:#fbbf24"], [data-theme="daylight"] [style^="color: #fbbf24"], [data-theme="daylight"] [style*="; color: #fbbf24"] { color: #a16207 !important; }
+[data-theme="daylight"] [style^="color: rgb(16, 185, 129)"], [data-theme="daylight"] [style*="; color: rgb(16, 185, 129)"], [data-theme="daylight"] [style^="color:#10b981"], [data-theme="daylight"] [style*=";color:#10b981"], [data-theme="daylight"] [style^="color: #10b981"], [data-theme="daylight"] [style*="; color: #10b981"] { color: #047857 !important; }
+[data-theme="daylight"] [style^="color: rgb(52, 211, 153)"], [data-theme="daylight"] [style*="; color: rgb(52, 211, 153)"], [data-theme="daylight"] [style^="color:#34d399"], [data-theme="daylight"] [style*=";color:#34d399"], [data-theme="daylight"] [style^="color: #34d399"], [data-theme="daylight"] [style*="; color: #34d399"] { color: #047857 !important; }
+[data-theme="daylight"] [style^="color: rgb(96, 165, 250)"], [data-theme="daylight"] [style*="; color: rgb(96, 165, 250)"], [data-theme="daylight"] [style^="color:#60a5fa"], [data-theme="daylight"] [style*=";color:#60a5fa"], [data-theme="daylight"] [style^="color: #60a5fa"], [data-theme="daylight"] [style*="; color: #60a5fa"] { color: #1d4ed8 !important; }
+[data-theme="daylight"] :is(.text-amber-600, .text-yellow-600, .text-orange-600) { color: #92400e; }
+
+/* status text that stays readable on both themes */
+.ink-success { color: color-mix(in oklch, var(--success) var(--atm, 100%), black); }
+.ink-danger { color: color-mix(in oklch, var(--danger) var(--atm, 100%), black); }
